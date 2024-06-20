@@ -6,6 +6,9 @@ import {mockData} from '../../stores/mock';
 import AccountModal from './AccountModal';
 import {IPersonalAccount} from '../../interfaces/personal.account';
 import './styles/AccountsList.scss';
+import Modal from "react-modal";
+
+Modal.setAppElement('#root');
 
 const PersonalAccountsList: React.FC = () => {
     const [accounts, setAccounts] = useState<IPersonalAccount[]>([]);
@@ -29,7 +32,9 @@ const PersonalAccountsList: React.FC = () => {
             account.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
             account.room.toLowerCase().includes(searchQuery.toLowerCase()) ||
             account.purpose.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            account.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            account.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            account.secondName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            account.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
             account.phone.toLowerCase().includes(searchQuery.toLowerCase())
         );
         setFilteredAccounts(filtered);
@@ -59,6 +64,12 @@ const PersonalAccountsList: React.FC = () => {
         setModalOpen(false);
     };
 
+    const handleDelete = (id: number) => {
+        console.log(id)
+        setAccounts(accounts.filter(acc => acc.id !== id));
+        setModalOpen(false);
+    };
+
     const handleAdd = () => {
         setEditingAccount(null);
         setModalOpen(true);
@@ -67,31 +78,37 @@ const PersonalAccountsList: React.FC = () => {
     const displayedAccounts = filteredAccounts.slice((page - 1) * 10, page * 10);
 
     return (
-        <div className="table-container">
-            <h1>Personal Accounts</h1>
-            <SearchFilter onSearch={handleSearch}/>
-            <button onClick={handleAdd} className="button">Add Account</button>
-            <table className="table">
-                <thead>
-                <tr>
-                    <th>ЛИЦЕВОЙ СЧЕТ</th>
-                    <th>АДРЕС</th>
-                    <th>ПОМЕЩЕНИЕ</th>
-                    <th>НАЗНАЧЕНИЕ ПОМЕЩЕНИЯ</th>
-                    <th>ФИО</th>
-                    <th>ТЕЛЕФОН</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {displayedAccounts.map(account => (
-                    <AccountItem key={account.id} account={account} onEdit={handleEdit}/>
-                ))}
-                </tbody>
-            </table>
-            <Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange}/>
-            <AccountModal isOpen={modalOpen} onRequestClose={() => setModalOpen(false)} account={editingAccount}
-                          onSave={handleSave}/>
+        <div className="d-flex flex-column">
+            <div>Personal Accounts</div>
+            <button onClick={handleAdd} className="button">Добавить лицевой счет</button>
+
+            <div className="account-table">
+                <div>
+                    <SearchFilter onSearch={handleSearch}/>
+                    <button onClick={handleAdd} className="button">Фильтры</button>
+                </div>
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th>ЛИЦЕВОЙ СЧЕТ</th>
+                        <th>АДРЕС</th>
+                        <th>ПОМЕЩЕНИЕ</th>
+                        <th>НАЗНАЧЕНИЕ ПОМЕЩЕНИЯ</th>
+                        <th>ФИО</th>
+                        <th>ТЕЛЕФОН</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {displayedAccounts.map(account => (
+                        <AccountItem key={account.id} account={account} onEdit={handleEdit}/>
+                    ))}
+                    </tbody>
+                </table>
+                <Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange}/>
+                <AccountModal isOpen={modalOpen} onRequestClose={() => setModalOpen(false)} account={editingAccount}
+                              onSave={handleSave} onDelete={handleDelete}/>
+            </div>
         </div>
     );
 };
