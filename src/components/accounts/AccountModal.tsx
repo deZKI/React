@@ -79,81 +79,84 @@ const AccountModal: React.FC<AccountModalProps> = ({isOpen, onRequestClose, acco
     };
 
     return (
-        <Modal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel="Account Modal" className="account-modal">
-            <h2>{account ? 'Edit Account' : 'Add Account'}</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label>Статус</label>
-                    <RadioSelector
-                        options={[
-                            {label: AccountStatus.Active, value: AccountStatus.Active},
-                            {label: AccountStatus.Closed, value: AccountStatus.Closed}
-                        ]}
-                        name="status"
-                        selectedValue={formData.status}
-                        onChange={(value) => handleRadioChange(value, 'status')}
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Назначение</label>
-                    <RadioSelector
-                        options={[
-                            {label: PurposeType.Residential, value: PurposeType.Residential},
-                            {label: PurposeType.NonResidential, value: PurposeType.NonResidential}
-                        ]}
-                        name="purpose"
-                        selectedValue={formData.purpose}
-                        onChange={(value) => handleRadioChange(value, 'purpose')}
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Держатель</label>
-                    <RadioSelector
-                        options={[
-                            {label: AccountHolderType.Individual, value: AccountHolderType.Individual},
-                            {label: AccountHolderType.LegalEntity, value: AccountHolderType.LegalEntity}
-                        ]}
-                        name="holder"
-                        selectedValue={formData.holder}
-                        onChange={(value) => handleRadioChange(value, 'holder')}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="accountNumber">ЛИЦЕВОЙ СЧЕТ</label>
-                    <input type="text" name="accountNumber" value={formData.accountNumber}
-                           onChange={handleChange}/>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="address">АДРЕС</label>
-                    <input type="text" name="address" value={formData.address} onChange={handleChange}/>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="room">ПОМЕЩЕНИЕ</label>
-                    <input type="text" name="room" value={formData.room} onChange={handleChange}/>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="firstName">Имя</label>
-                    <input type="text" name="firstName" value={formData.firstName}
-                           onChange={handleChange}/>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="middleName">Отчество</label>
-                    <input type="text" name="middleName" value={formData.secondName}
-                           onChange={handleChange}/>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="lastName">Фамилия</label>
-                    <input type="text" name="lastName" value={formData.lastName} onChange={handleChange}/>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="phone">ТЕЛЕФОН</label>
-                    <input type="text" name="phone" value={formData.phone} onChange={handleChange}/>
-                </div>
-                <button type="submit" className="button">{account ? 'Сохранить' : 'Добавить'}</button>
-                {account && (
-                    <button type="button" className="button" onClick={handleDelete}>Удалить</button>
-                )}
-            </form>
+        <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
+            <div className="account-modal">
+                <button onClick={() => onRequestClose()}>close</button>
+                <div>{account ? `Лицевой счет: ${formData.accountNumber}` : 'Добавление'}</div>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Статус</label>
+                        <RadioSelector
+                            options={[
+                                {label: AccountStatus.Active, value: AccountStatus.Active},
+                                {label: AccountStatus.Closed, value: AccountStatus.Closed}
+                            ]}
+                            name="status"
+                            selectedValue={formData.status}
+                            onChange={(value) => handleRadioChange(value, 'status')}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Назначение</label>
+                        <RadioSelector
+                            options={[
+                                {label: PurposeType.Residential, value: PurposeType.Residential},
+                                {label: PurposeType.NonResidential, value: PurposeType.NonResidential}
+                            ]}
+                            name="purpose"
+                            selectedValue={formData.purpose}
+                            onChange={(value) => handleRadioChange(value, 'purpose')}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Держатель</label>
+                        <RadioSelector
+                            options={[
+                                {label: AccountHolderType.Individual, value: AccountHolderType.Individual},
+                                {label: AccountHolderType.LegalEntity, value: AccountHolderType.LegalEntity}
+                            ]}
+                            name="holder"
+                            selectedValue={formData.holder}
+                            onChange={(value) => handleRadioChange(value, 'holder')}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="accountNumber">ЛИЦЕВОЙ СЧЕТ</label>
+                        <input type="text" name="accountNumber" value={formData.accountNumber}
+                               onChange={handleChange}/>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="address">АДРЕС</label>
+                        <input type="text" name="address" value={formData.address} onChange={handleChange}/>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="room">ПОМЕЩЕНИЕ</label>
+                        <input type="text" name="room" value={formData.room} onChange={handleChange}/>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="firstName">Имя</label>
+                        <input type="text" name="firstName" value={formData.firstName}
+                               onChange={handleChange}/>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="middleName">Отчество</label>
+                        <input type="text" name="middleName" value={formData.secondName}
+                               onChange={handleChange}/>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="lastName">Фамилия</label>
+                        <input type="text" name="lastName" value={formData.lastName} onChange={handleChange}/>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="phone">ТЕЛЕФОН</label>
+                        <input type="text" name="phone" value={formData.phone} onChange={handleChange}/>
+                    </div>
+                    <button type="submit" className="button">{account ? 'Сохранить' : 'Добавить'}</button>
+                    {account && (
+                        <button type="button" className="button" onClick={handleDelete}>Удалить</button>
+                    )}
+                </form>
+            </div>
         </Modal>
     );
 };

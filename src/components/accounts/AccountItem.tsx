@@ -11,16 +11,13 @@ const AccountItem: React.FC<Props> = ({account, onEdit}) => {
     const fullName = `${account.lastName} ${account.firstName} ${account.secondName}`;
 
     return (
-        <tr>
+        <tr className="account-row" onClick={() => onEdit(account)}>
             <td>{account.accountNumber}</td>
             <td>{account.address}</td>
             <td>{account.room}</td>
             <td>{account.purpose}</td>
             <td>{fullName}</td>
             <td>{account.phone}</td>
-            <td>
-                <button onClick={() => onEdit(account)}>Edit</button>
-            </td>
         </tr>
     )
 };
