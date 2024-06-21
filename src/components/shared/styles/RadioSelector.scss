@@ -1,0 +1,15 @@
+.radio-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.radio-option input[type="radio"] {
+  margin-right: 5px;
+}

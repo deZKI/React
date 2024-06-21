@@ -1,39 +1,46 @@
-import {AccountStatus} from '../enums/accounts.status';
-import {IPersonalAccount} from "../interfaces/personal.account";
-import {PurposeType} from "../enums/accounts.purpose";
-import {AccountHolderType} from "../enums/accounts.holders";
+import { IPersonalAccount } from "../interfaces/personal.account";
+import { PurposeType, AccountHolderType, AccountStatus } from "../enums/accounts";
 
-export const mockData: IPersonalAccount[] = [
-    {
-        id: 1,
-        status: AccountStatus.Active,
-        purpose: PurposeType.Residential,
-        holder: AccountHolderType.Individual,
-        accountNumber: '12345678',
-        company: 'ООО "Компания А"',
-        address: 'ул. Главная, д. 1',
-        room: 'Комната 101',
-        firstName: 'Иван',
-        secondName: 'Иванович',
-        lastName: 'Иванов',
-        organization: 'ИП "Организация А"',
-        email: 'ivan.ivanov@example.com',
-        phone: '+7-123-456-78-90',
-    },
-    {
-        id: 2,
-        status: AccountStatus.Closed,
-        purpose: PurposeType.NonResidential,
-        holder: AccountHolderType.LegalEntity,
-        accountNumber: '87654321',
-        company: 'ЗАО "Компания Б"',
-        address: 'пр. Дубовый, д. 45',
-        room: 'Офис 202',
-        firstName: 'Елена',
-        secondName: 'Петровна',
-        lastName: 'Сидорова',
-        organization: 'ООО "Организация Б"',
-        email: 'elena.sidorova@example.com',
-        phone: '+7-987-654-32-10',
-    },
-];
+// Генерация данных
+const generateMockData = (): IPersonalAccount[] => {
+    const data: IPersonalAccount[] = [];
+    const numberOfRecords = 1000; // Желаемое количество записей
+
+    for (let i = 1; i <= numberOfRecords; i++) {
+        const id = i;
+        const status = i % 2 === 0 ? AccountStatus.Active : AccountStatus.Closed;
+        const purpose = i % 3 === 0 ? PurposeType.Residential : PurposeType.NonResidential;
+        const holder = i % 4 === 0 ? AccountHolderType.LegalEntity : AccountHolderType.Individual;
+        const accountNumber = `${Math.floor(Math.random() * 100000000)}`.padStart(8, '0');
+        const company = `ООО "Компания ${String.fromCharCode(65 + i % 26)}"`;
+        const address = `ул. Примерная, д. ${i * 2}`;
+        const room = `Комната ${i}`;
+        const firstName = 'Имя';
+        const secondName = 'Отчество';
+        const lastName = `Фамилия ${i}`;
+        const organization = `Организация ${String.fromCharCode(65 + i % 26)}`;
+        const email = `person.${i}@example.com`;
+        const phone = `+7-${Math.floor(Math.random() * 1000)}-${Math.floor(Math.random() * 1000)}-${Math.floor(Math.random() * 1000)}`;
+
+        data.push({
+            id,
+            status,
+            purpose,
+            holder,
+            accountNumber,
+            company,
+            address,
+            room,
+            firstName,
+            secondName,
+            lastName,
+            organization,
+            email,
+            phone,
+        });
+    }
+
+    return data;
+};
+
+export const mockData: IPersonalAccount[] = generateMockData();

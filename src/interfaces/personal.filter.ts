@@ -1,6 +1,4 @@
-import {AccountStatus} from "../enums/accounts.status";
-import {PurposeType} from "../enums/accounts.purpose";
-import {AccountHolderType} from "../enums/accounts.holders";
+import {AccountStatus, AccountHolderType, PurposeType} from "../enums/accounts";
 
 export interface FiltersState {
     address: string;

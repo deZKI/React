@@ -3,3 +3,19 @@
   border: 1px solid #e3ebf6;
   overflow: auto;
 }
+
+.account-list {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.account-list-header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 2rem;
+}

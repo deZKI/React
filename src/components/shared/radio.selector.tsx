@@ -1,4 +1,5 @@
 import React from 'react';
+import "./styles/RadioSelector.scss"
 
 interface RadioSelectorProps<T extends string | number> {
     options: { label: string; value: T }[];
@@ -7,7 +8,7 @@ interface RadioSelectorProps<T extends string | number> {
     onChange: (value: T) => void;
 }
 
-const RadioSelector = <T extends string | number>({ options, name, selectedValue, onChange }: RadioSelectorProps<T>) => (
+const RadioSelector = <T extends string | number>({options, name, selectedValue, onChange}: RadioSelectorProps<T>) => (
     <div className="radio-selector">
         {options.map((option, index) => (
             <label key={index}>

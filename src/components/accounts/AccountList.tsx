@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import AccountItem from './AccountItem';
 import Pagination from './Pagination';
 import SearchFilter from './SearchFilter';
-import { mockData } from '../../stores/mock';
+import {mockData} from '../../stores/mock';
 import AccountModal from './AccountModal';
-import { IPersonalAccount } from '../../interfaces/personal.account';
+import {IPersonalAccount} from '../../interfaces/personal.account';
 import './styles/AccountsList.scss';
 import Modal from "react-modal";
 import Filters from './Filters';
-import { AccountStatus } from '../../enums/accounts.status';
-import { PurposeType } from '../../enums/accounts.purpose';
-import { AccountHolderType } from '../../enums/accounts.holders';
+import {AccountStatus, PurposeType, AccountHolderType} from '../../enums/accounts';
 import {FiltersState} from "../../interfaces/personal.filter";
 
 Modal.setAppElement('#root');
@@ -23,6 +21,9 @@ const PersonalAccountsList: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
     const [editingAccount, setEditingAccount] = useState<IPersonalAccount | null>(null);
+    const [itemsPerPage, setItemsPerPage] = useState(10); // По умолчанию 10 записей на странице
+    const [totalCount, setTotalCount] = useState(0); // Добавляем totalCount
+    const [filtersModalOpen, setFiltersModalOpen] = useState(false);
     const [filters, setFilters] = useState<FiltersState>({
         address: '',
         room: '',
@@ -30,19 +31,26 @@ const PersonalAccountsList: React.FC = () => {
         purpose: 'all',
         holder: 'all',
     });
+    const [tempFilters, setTempFilters] = useState<FiltersState>({...filters});
 
     useEffect(() => {
-        const perPage = 10;
+        const perPage = itemsPerPage;
         setAccounts(mockData);
         setFilteredAccounts(mockData);
+        setTotalCount(mockData.length); // Установка общего количества записей
         setTotalPages(Math.ceil(mockData.length / perPage));
-    }, []);
+    }, [itemsPerPage]);
 
+    useEffect(() => {
+        setPage(1)
+    }, [searchQuery, filters])
     useEffect(() => {
         const filtered = accounts.filter(account =>
             (filters.status === 'all' || account.status === filters.status) &&
             (filters.purpose === 'all' || account.purpose === filters.purpose) &&
             (filters.holder === 'all' || account.holder === filters.holder) &&
+            (account.address.toLowerCase().includes(filters.address.toLowerCase())) &&
+            (account.room.toLowerCase().includes(filters.room.toLowerCase())) &&
             (account.accountNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 account.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 account.room.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -52,8 +60,9 @@ const PersonalAccountsList: React.FC = () => {
                 account.phone.toLowerCase().includes(searchQuery.toLowerCase()))
         );
         setFilteredAccounts(filtered);
-        setTotalPages(Math.ceil(filtered.length / 10));
-    }, [searchQuery, accounts, filters]);
+        setTotalPages(Math.ceil(filtered.length / itemsPerPage));
+        setTotalCount(filtered.length); // Обновляем общее количество записей
+    }, [searchQuery, accounts, filters, itemsPerPage]);
 
     const handlePageChange = (newPage: number) => {
         setPage(newPage);
@@ -61,6 +70,11 @@ const PersonalAccountsList: React.FC = () => {
 
     const handleSearch = (query: string) => {
         setSearchQuery(query);
+    };
+
+    const handleItemsPerPageChange = (newSize: number) => {
+        setItemsPerPage(newSize);
+        setPage(1); // Сбрасываем страницу при изменении количества записей на странице
     };
 
     const handleEdit = (account: IPersonalAccount) => {
@@ -88,25 +102,34 @@ const PersonalAccountsList: React.FC = () => {
         setModalOpen(true);
     };
 
-    const handleFilterChange = (fieldName: keyof FiltersState, value: string | AccountStatus | PurposeType | AccountHolderType) => {
-        setFilters({ ...filters, [fieldName]: value });
+    const handleTempFilterChange = (fieldName: keyof FiltersState, value: string | AccountStatus | PurposeType | AccountHolderType) => {
+        setTempFilters({...tempFilters, [fieldName]: value});
     };
 
-    const displayedAccounts = filteredAccounts.slice((page - 1) * 10, page * 10);
+    const applyFilters = () => {
+        setFilters(tempFilters);
+        setFiltersModalOpen(false);
+    };
+
+    const displayedAccounts = filteredAccounts.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
     return (
-        <div className="d-flex flex-column">
-            <div>Лицевые счета</div>
-            <button onClick={handleAdd} className="button">Добавить лицевой счет</button>
+        <div className="account-list">
+            <div className="account-list-header">
+                <h1>Лицевые счета </h1>
+
+                <button onClick={handleAdd} className="main-button">Добавить лицевой счет</button>
+            </div>
 
             <div className="account-table">
                 <div>
                     <SearchFilter onSearch={handleSearch}/>
-                    <Filters filters={filters} onFilterChange={handleFilterChange} />
+                    <button onClick={() => setFiltersModalOpen(true)} className="button">Фильтры</button>
                 </div>
                 <table className="table">
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th>ЛИЦЕВОЙ СЧЕТ</th>
                         <th>АДРЕС</th>
                         <th>ПОМЕЩЕНИЕ</th>
@@ -121,10 +144,27 @@ const PersonalAccountsList: React.FC = () => {
                     ))}
                     </tbody>
                 </table>
-                <Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange}/>
+                <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                    totalCount={totalCount}
+                    itemsPerPage={itemsPerPage}
+                    onItemsPerPageChange={handleItemsPerPageChange}
+                />
                 <AccountModal isOpen={modalOpen} onRequestClose={() => setModalOpen(false)} account={editingAccount}
                               onSave={handleSave} onDelete={handleDelete}/>
             </div>
+
+            <Modal
+                isOpen={filtersModalOpen}
+                onRequestClose={() => setFiltersModalOpen(false)}
+                className="filters-modal"
+                overlayClassName="filters-modal-overlay"
+            >
+                <Filters onFilterChange={handleTempFilterChange} filters={tempFilters}/>
+                <button onClick={applyFilters} className="button">Применить</button>
+            </Modal>
         </div>
     );
 };

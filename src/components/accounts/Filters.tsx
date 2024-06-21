@@ -1,8 +1,8 @@
 import React from 'react';
-import { AccountStatus } from '../../enums/accounts.status';
-import { PurposeType } from '../../enums/accounts.purpose';
-import { AccountHolderType } from '../../enums/accounts.holders';
-import {FiltersState} from "../../interfaces/personal.filter";
+import { AccountStatus, AccountHolderType, PurposeType } from '../../enums/accounts';
+import { FiltersState } from '../../interfaces/personal.filter';
+import RadioSelector from '../shared/radio.selector';
+import './styles/Filters.scss';
 
 interface FiltersProps {
     onFilterChange: (fieldName: keyof FiltersState, value: string | AccountStatus | PurposeType | AccountHolderType) => void;
@@ -31,33 +31,45 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange, filters }) => {
                 value={filters.room}
                 onChange={handleInputChange}
             />
-            <select
-                name="status"
-                value={filters.status}
-                onChange={handleInputChange}
-            >
-                <option value="all">Все</option>
-                <option value={AccountStatus.Active}>Активный</option>
-                <option value={AccountStatus.Closed}>Закрытый</option>
-            </select>
-            <select
-                name="purpose"
-                value={filters.purpose}
-                onChange={handleInputChange}
-            >
-                <option value="all">Все</option>
-                <option value={PurposeType.Residential}>Жилой</option>
-                <option value={PurposeType.NonResidential}>Нежилой</option>
-            </select>
-            <select
-                name="holder"
-                value={filters.holder}
-                onChange={handleInputChange}
-            >
-                <option value="all">Все</option>
-                <option value={AccountHolderType.Individual}>Физическое лицо</option>
-                <option value={AccountHolderType.LegalEntity}>Юридическое лицо</option>
-            </select>
+            <div className="filter-group">
+                <label>Статус</label>
+                <RadioSelector
+                    options={[
+                        { label: 'Все', value: 'all' },
+                        { label: 'Активный', value: AccountStatus.Active },
+                        { label: 'Закрытый', value: AccountStatus.Closed },
+                    ]}
+                    name="status"
+                    selectedValue={filters.status}
+                    onChange={(value) => onFilterChange('status', value)}
+                />
+            </div>
+            <div className="filter-group">
+                <label>Назначение</label>
+                <RadioSelector
+                    options={[
+                        { label: 'Все', value: 'all' },
+                        { label: 'Жилой', value: PurposeType.Residential },
+                        { label: 'Нежилой', value: PurposeType.NonResidential },
+                    ]}
+                    name="purpose"
+                    selectedValue={filters.purpose}
+                    onChange={(value) => onFilterChange('purpose', value)}
+                />
+            </div>
+            <div className="filter-group">
+                <label>Держатель</label>
+                <RadioSelector
+                    options={[
+                        { label: 'Все', value: 'all' },
+                        { label: 'Физическое лицо', value: AccountHolderType.Individual },
+                        { label: 'Юридическое лицо', value: AccountHolderType.LegalEntity },
+                    ]}
+                    name="holder"
+                    selectedValue={filters.holder}
+                    onChange={(value) => onFilterChange('holder', value)}
+                />
+            </div>
         </div>
     );
 };

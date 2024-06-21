@@ -12,6 +12,7 @@ const AccountItem: React.FC<Props> = ({account, onEdit}) => {
 
     return (
         <tr className="account-row" onClick={() => onEdit(account)}>
+            <td>{account.id}</td>
             <td>{account.accountNumber}</td>
             <td>{account.address}</td>
             <td>{account.room}</td>
