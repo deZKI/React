@@ -10,6 +10,7 @@ import Modal from "react-modal";
 import Filters from './Filters';
 import {AccountStatus, PurposeType, AccountHolderType} from '../../enums/accounts';
 import {FiltersState} from "../../interfaces/personal.filter";
+import Bar from "../../icons/Bar";
 
 Modal.setAppElement('#root');
 
@@ -33,6 +34,10 @@ const PersonalAccountsList: React.FC = () => {
     });
     const [tempFilters, setTempFilters] = useState<FiltersState>({...filters});
 
+    // Добавляем состояние для сортировки
+    const [sortColumn, setSortColumn] = useState<string | null>(null);
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
     useEffect(() => {
         const perPage = itemsPerPage;
         setAccounts(mockData);
@@ -44,6 +49,7 @@ const PersonalAccountsList: React.FC = () => {
     useEffect(() => {
         setPage(1)
     }, [searchQuery, filters])
+
     useEffect(() => {
         const filtered = accounts.filter(account =>
             (filters.status === 'all' || account.status === filters.status) &&
@@ -59,10 +65,35 @@ const PersonalAccountsList: React.FC = () => {
                 account.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 account.phone.toLowerCase().includes(searchQuery.toLowerCase()))
         );
-        setFilteredAccounts(filtered);
-        setTotalPages(Math.ceil(filtered.length / itemsPerPage));
-        setTotalCount(filtered.length); // Обновляем общее количество записей
-    }, [searchQuery, accounts, filters, itemsPerPage]);
+
+        // Применяем сортировку
+        const sorted = applySorting(filtered, sortColumn, sortDirection);
+        setFilteredAccounts(sorted);
+        setTotalPages(Math.ceil(sorted.length / itemsPerPage));
+        setTotalCount(sorted.length); // Обновляем общее количество записей
+    }, [searchQuery, accounts, filters, itemsPerPage, sortColumn, sortDirection]);
+
+    const applySorting = (
+        data: IPersonalAccount[],
+        column: string | null,
+        direction: 'asc' | 'desc'
+    ): IPersonalAccount[] => {
+        if (!column) return data;
+
+        const sortedData = [...data];
+        sortedData.sort((a, b) => {
+            const valueA = a[column as keyof IPersonalAccount];
+            const valueB = b[column as keyof IPersonalAccount];
+
+            if (typeof valueA === 'string' && typeof valueB === 'string') {
+                return direction === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+            }
+
+            return direction === 'asc' ? (valueA as number) - (valueB as number) : (valueB as number) - (valueA as number);
+        });
+
+        return sortedData;
+    };
 
     const handlePageChange = (newPage: number) => {
         setPage(newPage);
@@ -102,7 +133,10 @@ const PersonalAccountsList: React.FC = () => {
         setModalOpen(true);
     };
 
-    const handleTempFilterChange = (fieldName: keyof FiltersState, value: string | AccountStatus | PurposeType | AccountHolderType) => {
+    const handleTempFilterChange = (
+        fieldName: keyof FiltersState,
+        value: string | AccountStatus | PurposeType | AccountHolderType
+    ) => {
         setTempFilters({...tempFilters, [fieldName]: value});
     };
 
@@ -111,31 +145,51 @@ const PersonalAccountsList: React.FC = () => {
         setFiltersModalOpen(false);
     };
 
+    const handleSort = (column: string) => {
+        if (column === sortColumn) {
+            // Если уже выбран этот столбец, меняем направление сортировки
+            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        } else {
+            // Если выбран новый столбец, сортируем по нему по умолчанию по возрастанию
+            setSortColumn(column);
+            setSortDirection('asc');
+        }
+    };
+
     const displayedAccounts = filteredAccounts.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
     return (
         <div className="account-list">
             <div className="account-list-header">
                 <h1>Лицевые счета </h1>
-
-                <button onClick={handleAdd} className="main-button">Добавить лицевой счет</button>
+                <button onClick={handleAdd} className="btn btn-primary">Добавить лицевой счет</button>
             </div>
 
-            <div className="account-table">
-                <div>
-                    <SearchFilter onSearch={handleSearch}/>
-                    <button onClick={() => setFiltersModalOpen(true)} className="button">Фильтры</button>
+            <div className="account-list-body">
+                <div className="d-flex align-items-center">
+                    <div style={{flex: 1}}><SearchFilter onSearch={handleSearch}/></div>
+                    <button onClick={() => setFiltersModalOpen(true)}
+                            className="flex-shrink-0 btn btn-outline-secondary btn-sm">
+                        <Bar></Bar>Фильтры
+                    </button>
                 </div>
-                <table className="table">
+                <table className="table account-table">
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>ЛИЦЕВОЙ СЧЕТ</th>
-                        <th>АДРЕС</th>
-                        <th>ПОМЕЩЕНИЕ</th>
-                        <th>НАЗНАЧЕНИЕ ПОМЕЩЕНИЯ</th>
-                        <th>ФИО</th>
-                        <th>ТЕЛЕФОН</th>
+                        <th onClick={() => handleSort('id')} title="Нажмите для сортировки по ID">ID</th>
+                        <th onClick={() => handleSort('accountNumber')} title="Нажмите для сортировки по счету ">ЛИЦЕВОЙ
+                            СЧЕТ
+                        </th>
+                        <th onClick={() => handleSort('address')} title="Нажмите для сортировки по адресу">АДРЕС</th>
+                        <th onClick={() => handleSort('room')} title="Нажмите для сортировки по помещению">ПОМЕЩЕНИЕ
+                        </th>
+                        <th onClick={() => handleSort('purpose')}
+                            title="Нажмите для сортировки по назначению помещений">НАЗНАЧЕНИЕ ПОМЕЩЕНИЯ
+                        </th>
+                        <th onClick={() => handleSort('lastName')} title="Нажмите для сортировки фамилии">ФИО</th>
+                        <th onClick={() => handleSort('phone')} title="Нажмите для сортировки номеру телефона">ТЕЛЕФОН
+                        </th>
+
                     </tr>
                     </thead>
                     <tbody>
@@ -162,8 +216,10 @@ const PersonalAccountsList: React.FC = () => {
                 className="filters-modal"
                 overlayClassName="filters-modal-overlay"
             >
-                <Filters onFilterChange={handleTempFilterChange} filters={tempFilters}/>
-                <button onClick={applyFilters} className="button">Применить</button>
+                <div className="d-flex flex-column flex-end">
+                    <Filters onFilterChange={handleTempFilterChange} filters={tempFilters}/>
+                    <button onClick={applyFilters} className="btn btn-primary">Применить</button>
+                </div>
             </Modal>
         </div>
     );

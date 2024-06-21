@@ -1,9 +1,9 @@
 // AccountModal.scss
 
 .account-modal {
-  max-width: 400px;
+  width: fit-content;
   margin: 0 auto;
-  padding: 20px;
+  padding: 1.25rem;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -15,7 +15,6 @@
 
     label {
       display: block;
-      margin-bottom: 8px;
       font-weight: bold;
     }
 
@@ -40,13 +39,53 @@
     }
   }
 
-  &-header {
-    position: relative;
-    height: 3rem;
-  }
   &__close-button {
     position: absolute;
     right: 0;
     top: 0;
   }
 }
+
+.account-modal-header {
+  position: relative;
+
+  &:first-child {
+    div {
+      max-width: 80%;
+    }
+  }
+}
+
+.account-modal-choices {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.account-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+
+//.modal__overlay {
+//  position: fixed !important;
+//  display: flex;
+//  justify-content: center;
+//  align-items: center;
+//  background-color: rgba(0, 0, 0, 0.7) !important;
+//  z-index: 999 !important;
+//}
+//
+//.modal__content {
+//  position: relative !important;
+//  width: fit-content !important;
+//  height: fit-content !important;
+//  overflow: auto !important;
+//  background-color: #ffffff !important;
+//  -webkit-transform: translate(-50, -50%) !important;
+//  transform: translate(-50, -50%) !important;
+//}

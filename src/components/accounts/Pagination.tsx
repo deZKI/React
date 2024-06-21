@@ -1,5 +1,6 @@
 import React from 'react';
 import './styles/Pagination.scss';
+import Arrow from "../../icons/Arrow";
 
 interface Props {
     page: number;
@@ -43,18 +44,15 @@ const Pagination: React.FC<Props> = ({
                 </select>
             </div>
 
-            <div>
+            <div className="pagination-info">
                 <button onClick={handlePrev} disabled={page === 1}>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
-                    </svg>
+                    <Arrow></Arrow>
                 </button>
 
                 <span>{page} из {totalPages}</span>
-                <button onClick={handleNext} disabled={page === totalPages}>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6-1.41 1.41z"/>
-                    </svg>
+
+                <button style={{transform: "scale(-1, 1)"}} onClick={handleNext} disabled={page === totalPages}>
+                    <Arrow></Arrow>
                 </button>
             </div>
 

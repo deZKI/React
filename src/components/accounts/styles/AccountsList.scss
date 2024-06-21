@@ -1,7 +1,10 @@
-.account-table {
+.account-list-body {
   padding: 0.75rem;
   border: 1px solid #e3ebf6;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .account-list {
@@ -18,4 +21,14 @@
   align-items: center;
 
   margin-bottom: 2rem;
+}
+
+.account-table {
+
+  th {
+    position: static;
+  }
+  th:hover {
+    cursor: pointer;
+  }
 }

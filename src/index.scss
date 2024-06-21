@@ -1,9 +1,8 @@
 $color-main: #002E9F;
 $color-button-background: #BB8493;
-$color-button-text: #fff;
+$white: #fff;
 $color-button-text-secondary: #BB8493;
 $color-button-background-hover: #a97887;
-$color-button-text-hover: #fff;
 
 body {
   margin: 0;
@@ -20,31 +19,10 @@ code {
   monospace;
 }
 
-.button {
-  border: none;
-  background: none;
-}
-
-.main-button {
-  background-color: $color-button-background;
-  border-color: $color-button-background;
-  color: $color-button-text;
-  border: none;
-  padding: 8px 16px;
-  margin-top: 10px;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
-
-  &:hover {
-    background: $color-button-background-hover;
-    border-color: $color-button-background-hover;
-    color: $color-button-text-hover
-  }
-
-  &__full-width {
-    width: 100%;
-  }
+button.btn-primary {
+  background: $color-button-background !important;
+  border-color: $color-button-background !important;
+  color: $white !important;
 }
 
 h1 {
@@ -56,4 +34,28 @@ h1 {
   font-size: 26px;
   line-height: 32px;
   white-space: nowrap;
+}
+
+.ReactModal__Overlay {
+  position: fixed !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  z-index: 999 !important;
+}
+
+.ReactModal__Content {
+  position: relative !important;
+  width: fit-content !important;
+  height: fit-content !important;
+  overflow: auto !important;
+  background-color: $white !important;
+  -webkit-transform: translate(-50, -50%) !important;
+  transform: translate(-50, -50%) !important;
+}
+
+.button {
+  background: none;
+  border: none;
 }

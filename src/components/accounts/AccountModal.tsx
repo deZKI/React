@@ -98,47 +98,46 @@ const AccountModal: React.FC<AccountModalProps> = ({isOpen, onRequestClose, acco
         <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
             <div className="account-modal">
                 <div className="account-modal-header">
-                    <h2>{account ? `Лицевой счет: ${formData.accountNumber}` : 'Добавление'}</h2>
+                    <div><h2>{account ? `Лицевой счет: ${formData.accountNumber}` : 'Добавление'}</h2></div>
                     <button className="button account-modal__close-button" onClick={() => onRequestClose()}>
                         <XMark width="32" height="32"/>
                     </button>
                 </div>
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label>Статус</label>
-                        <RadioSelector
-                            options={[
-                                {label: AccountStatus.Active, value: AccountStatus.Active},
-                                {label: AccountStatus.Closed, value: AccountStatus.Closed}
-                            ]}
-                            name="status"
-                            selectedValue={formData.status}
-                            onChange={(value) => handleRadioChange(value, 'status')}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Назначение</label>
-                        <RadioSelector
-                            options={[
-                                {label: PurposeType.Residential, value: PurposeType.Residential},
-                                {label: PurposeType.NonResidential, value: PurposeType.NonResidential}
-                            ]}
-                            name="purpose"
-                            selectedValue={formData.purpose}
-                            onChange={(value) => handleRadioChange(value, 'purpose')}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Держатель</label>
-                        <RadioSelector
-                            options={[
-                                {label: AccountHolderType.Individual, value: AccountHolderType.Individual},
-                                {label: AccountHolderType.LegalEntity, value: AccountHolderType.LegalEntity}
-                            ]}
-                            name="holder"
-                            selectedValue={formData.holder}
-                            onChange={(value) => handleRadioChange(value, 'holder')}
-                        />
+                <form className="account-modal-form" onSubmit={handleSubmit}>
+                    <div className="account-modal-choices gap-4">
+                        <div className="form-group">
+                            <RadioSelector
+                                options={[
+                                    {label: AccountStatus.Active, value: AccountStatus.Active},
+                                    {label: AccountStatus.Closed, value: AccountStatus.Closed}
+                                ]}
+                                name="status"
+                                selectedValue={formData.status}
+                                onChange={(value) => handleRadioChange(value, 'status')}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <RadioSelector
+                                options={[
+                                    {label: PurposeType.Residential, value: PurposeType.Residential},
+                                    {label: PurposeType.NonResidential, value: PurposeType.NonResidential}
+                                ]}
+                                name="purpose"
+                                selectedValue={formData.purpose}
+                                onChange={(value) => handleRadioChange(value, 'purpose')}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <RadioSelector
+                                options={[
+                                    {label: AccountHolderType.Individual, value: AccountHolderType.Individual},
+                                    {label: AccountHolderType.LegalEntity, value: AccountHolderType.LegalEntity}
+                                ]}
+                                name="holder"
+                                selectedValue={formData.holder}
+                                onChange={(value) => handleRadioChange(value, 'holder')}
+                            />
+                        </div>
                     </div>
                     <div className="form-group">
                         <label htmlFor="accountNumber">ЛИЦЕВОЙ СЧЕТ</label>
@@ -173,37 +172,31 @@ const AccountModal: React.FC<AccountModalProps> = ({isOpen, onRequestClose, acco
                         />
                         {formErrors.room && <div className="error-message">{formErrors.room}</div>}
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="firstName">Имя</label>
-                        <input
-                            type="text"
-                            name="firstName"
-                            value={formData.firstName}
-                            onChange={handleChange}
-                            className={formErrors.firstName ? 'error' : ''}
-                        />
-                        {formErrors.firstName && <div className="error-message">{formErrors.firstName}</div>}
+                    <div className="row">
+                        <div className="col form-group">
+                            <label htmlFor="firstName">Имя</label>
+                            <input
+                                type="text"
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                className={formErrors.firstName ? 'error' : ''}
+                            />
+                            {formErrors.firstName && <div className="error-message">{formErrors.firstName}</div>}
+                        </div>
+                        <div className="col form-group">
+                            <label htmlFor="lastName">Фамилия</label>
+                            <input
+                                type="text"
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                className={formErrors.lastName ? 'error' : ''}
+                            />
+                            {formErrors.lastName && <div className="error-message">{formErrors.lastName}</div>}
+                        </div>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="secondName">Отчество</label>
-                        <input
-                            type="text"
-                            name="secondName"
-                            value={formData.secondName}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="lastName">Фамилия</label>
-                        <input
-                            type="text"
-                            name="lastName"
-                            value={formData.lastName}
-                            onChange={handleChange}
-                            className={formErrors.lastName ? 'error' : ''}
-                        />
-                        {formErrors.lastName && <div className="error-message">{formErrors.lastName}</div>}
-                    </div>
+
                     <div className="form-group">
                         <label htmlFor="phone">ТЕЛЕФОН</label>
                         <input
@@ -215,14 +208,50 @@ const AccountModal: React.FC<AccountModalProps> = ({isOpen, onRequestClose, acco
                         />
                         {formErrors.phone && <div className="error-message">{formErrors.phone}</div>}
                     </div>
-                    <div>
-                        <button type="submit"
-                                className="main-button main-button__full-width">{account ? 'Сохранить' : 'Добавить'}</button>
+                    <div className="form-group">
+                        <label htmlFor="secondName">Отчество</label>
+                        <input
+                            type="text"
+                            name="secondName"
+                            value={formData.secondName}
+                            onChange={handleChange}
+                        />
                     </div>
-                    {account && (
-                        <button type="button" className="main-button main-button__full-width"
-                                onClick={handleDelete}>Удалить</button>
-                    )}
+
+                    <div className="row">
+                        <div className="col form-group">
+                            <label htmlFor="email">Email</label>
+                            <input
+                                type="text"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                className={formErrors.email ? 'error' : ''}
+                            />
+                            {formErrors.email && <div className="error-message">{formErrors.email}</div>}
+                        </div>
+                        <div className="col form-group">
+                            <label htmlFor="phone">Телефон</label>
+                            <input
+                                type="text"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleChange}
+                                className={formErrors.phone ? 'error' : ''}
+                            />
+                            {formErrors.phone && <div className="error-message">{formErrors.phone}</div>}
+                        </div>
+                    </div>
+
+                    <div className="row gap-4">
+                        {account && (
+                            <button type="button" className="col btn btn-outline-danger"
+                                    onClick={handleDelete}>Удалить</button>
+                        )}
+
+                        <button type="submit"
+                                className=" col btn w-100 btn btn-primary">{account ? 'Сохранить' : 'Добавить'}</button>
+                    </div>
                 </form>
             </div>
         </Modal>
