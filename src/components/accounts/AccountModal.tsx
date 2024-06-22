@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import {IPersonalAccount} from '../../interfaces/personal.account';
+import { IPersonalAccount } from '../../interfaces/personal.account';
 import './styles/AccountModal.scss';
-import {AccountStatus, AccountHolderType, PurposeType} from "../../enums/accounts";
+import { AccountStatus, AccountHolderType, PurposeType } from "../../enums/accounts";
 import RadioSelector from "../shared/radio.selector";
 import XMark from "../../icons/Xmark";
 
@@ -14,7 +14,7 @@ interface AccountModalProps {
     onDelete: (id: number) => void;
 }
 
-const AccountModal: React.FC<AccountModalProps> = ({isOpen, onRequestClose, account, onSave, onDelete}) => {
+const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onRequestClose, account, onSave, onDelete }) => {
     const initialFormData: IPersonalAccount = {
         id: 0,
         accountNumber: '',
@@ -34,6 +34,7 @@ const AccountModal: React.FC<AccountModalProps> = ({isOpen, onRequestClose, acco
 
     const [formData, setFormData] = useState<IPersonalAccount>(initialFormData);
     const [formErrors, setFormErrors] = useState<Partial<IPersonalAccount>>({});
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
     useEffect(() => {
         if (account) {
@@ -71,20 +72,20 @@ const AccountModal: React.FC<AccountModalProps> = ({isOpen, onRequestClose, acco
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const {name, value} = e.target;
-        setFormData({...formData, [name]: value});
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validateForm()) {
-            onSave({...formData, id: formData.id || Date.now()});
+            onSave({ ...formData, id: formData.id || Date.now() });
             onRequestClose();
         }
     };
 
     const handleRadioChange = (value: any, fieldName: string) => {
-        setFormData({...formData, [fieldName]: value});
+        setFormData({ ...formData, [fieldName]: value });
     };
 
     const handleDelete = () => {
@@ -100,7 +101,7 @@ const AccountModal: React.FC<AccountModalProps> = ({isOpen, onRequestClose, acco
                 <div className="account-modal-header">
                     <div><h2>{account ? `Лицевой счет: ${formData.accountNumber}` : 'Добавление'}</h2></div>
                     <button className="button account-modal__close-button" onClick={() => onRequestClose()}>
-                        <XMark width="32" height="32"/>
+                        <XMark width="32" height="32" />
                     </button>
                 </div>
                 <form className="account-modal-form" onSubmit={handleSubmit}>
@@ -108,8 +109,8 @@ const AccountModal: React.FC<AccountModalProps> = ({isOpen, onRequestClose, acco
                         <div className="form-group">
                             <RadioSelector
                                 options={[
-                                    {label: AccountStatus.Active, value: AccountStatus.Active},
-                                    {label: AccountStatus.Closed, value: AccountStatus.Closed}
+                                    { label: AccountStatus.Active, value: AccountStatus.Active },
+                                    { label: AccountStatus.Closed, value: AccountStatus.Closed }
                                 ]}
                                 name="status"
                                 selectedValue={formData.status}
@@ -119,8 +120,8 @@ const AccountModal: React.FC<AccountModalProps> = ({isOpen, onRequestClose, acco
                         <div className="form-group">
                             <RadioSelector
                                 options={[
-                                    {label: PurposeType.Residential, value: PurposeType.Residential},
-                                    {label: PurposeType.NonResidential, value: PurposeType.NonResidential}
+                                    { label: PurposeType.Residential, value: PurposeType.Residential },
+                                    { label: PurposeType.NonResidential, value: PurposeType.NonResidential }
                                 ]}
                                 name="purpose"
                                 selectedValue={formData.purpose}
@@ -130,8 +131,8 @@ const AccountModal: React.FC<AccountModalProps> = ({isOpen, onRequestClose, acco
                         <div className="form-group">
                             <RadioSelector
                                 options={[
-                                    {label: AccountHolderType.Individual, value: AccountHolderType.Individual},
-                                    {label: AccountHolderType.LegalEntity, value: AccountHolderType.LegalEntity}
+                                    { label: AccountHolderType.Individual, value: AccountHolderType.Individual },
+                                    { label: AccountHolderType.LegalEntity, value: AccountHolderType.LegalEntity }
                                 ]}
                                 name="holder"
                                 selectedValue={formData.holder}
@@ -246,7 +247,7 @@ const AccountModal: React.FC<AccountModalProps> = ({isOpen, onRequestClose, acco
                     <div className="row gap-4">
                         {account && (
                             <button type="button" className="col btn btn-outline-danger"
-                                    onClick={handleDelete}>Удалить</button>
+                                    onClick={() => setIsConfirmModalOpen(true)}>Удалить</button>
                         )}
 
                         <button type="submit"
@@ -254,6 +255,17 @@ const AccountModal: React.FC<AccountModalProps> = ({isOpen, onRequestClose, acco
                     </div>
                 </form>
             </div>
+
+            {/* Модальное окно подтверждения удаления */}
+            <Modal isOpen={isConfirmModalOpen} onRequestClose={() => setIsConfirmModalOpen(false)}>
+                <div className="confirm-modal">
+                    <h3>Вы уверены, что хотите удалить этот лицевой счет?</h3>
+                    <div className="confirm-modal-actions">
+                        <button className="btn btn-outline-secondary" onClick={() => setIsConfirmModalOpen(false)}>Отмена</button>
+                        <button className="btn btn-danger" onClick={handleDelete}>Удалить</button>
+                    </div>
+                </div>
+            </Modal>
         </Modal>
     );
 };

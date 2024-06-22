@@ -40,15 +40,16 @@ h1 {
   position: fixed !important;
   display: flex;
   justify-content: center;
-  align-items: center;
   background-color: rgba(0, 0, 0, 0.7) !important;
   z-index: 999 !important;
+  overflow: scroll!important;
 }
 
 .ReactModal__Content {
   position: relative !important;
   width: fit-content !important;
   height: fit-content !important;
+  inset: 0 !important;
   overflow: auto !important;
   background-color: $white !important;
   -webkit-transform: translate(-50, -50%) !important;
