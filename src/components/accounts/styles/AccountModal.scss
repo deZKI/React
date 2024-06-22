@@ -1,0 +1,71 @@
+// AccountModal.scss
+
+.account-modal {
+  width: fit-content;
+  margin: 0 auto;
+  padding: 1.25rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  color: #333333;
+
+  .form-group {
+    margin-bottom: 16px;
+
+    label {
+      display: block;
+      font-weight: bold;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #cccccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"].error {
+      border-color: #dc3545;
+    }
+
+    .error-message {
+      color: #dc3545;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+  }
+
+  &__close-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
+
+.account-modal-header {
+  position: relative;
+
+  &:first-child {
+    div {
+      max-width: 80%;
+    }
+  }
+}
+
+.account-modal-choices {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.account-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}

@@ -1,0 +1,48 @@
+.radio-selector {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 6px;
+  gap: 5px;
+  background-color: #f5f6f6;
+  padding: 5px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.radio-option input[type="radio"] {
+  margin-right: 5px;
+}
+
+.radio-option__input {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.radio-option__label {
+  padding: 4px 6px;
+  white-space: nowrap;
+  user-select: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 4px;
+  transition: color .15s linear;
+}
+
+.radio-option__option {
+  position: relative;
+}
